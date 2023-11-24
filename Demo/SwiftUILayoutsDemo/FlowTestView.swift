@@ -13,24 +13,27 @@ struct FlowTestView: View {
     @State var horizontalAlignment: HorizontalAlignment = .leading
     @State var verticalAlignment: VerticalAlignment = .top
     var body: some View {
-        ScrollView(.vertical) {
-            VStack(spacing: 0) {
-                AnyLayout(FlowLayout(alignment:.init(horizontal: horizontalAlignment, vertical: verticalAlignment))) {
-                    ForEach(testContent, id: \.self) { i in
-                        Text(i)
-                            .padding(6)
-                            .frame(maxHeight: .infinity)
-                            .background(
-                                RoundedRectangle(cornerRadius: 5, style: .continuous)
-                                .fill(Color(.secondarySystemBackground))
-                            )
-                    }
-                }.padding(10)
-                Divider()
+        GeometryReader { proxy in
+            ScrollView(.vertical) {
+                VStack(spacing: 0) {
+                    AnyLayout(FlowLayout(alignment:.init(horizontal: horizontalAlignment, vertical: verticalAlignment))) {
+                        ForEach(testContent, id: \.self) { i in
+                            Text(i)
+                                .padding(6)
+                                .frame(maxHeight: .infinity)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 5, style: .continuous)
+                                        .fill(Color(.gray))
+                                )
+                        }
+                    }.padding(10)
+                    Divider()
+                }
+                .animation(.default, value: horizontalAlignment)
+                .animation(.default, value: verticalAlignment)
+                .animation(.default, value: testContent)
+                .animation(.default, value: proxy.size)
             }
-            .animation(.default, value: horizontalAlignment)
-            .animation(.default, value: verticalAlignment)
-            .animation(.default, value: testContent)
         }
         .safeAreaInset(edge: .top) {
             HStack {
